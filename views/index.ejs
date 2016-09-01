@@ -4,6 +4,7 @@
 		<title>Badger News</title>
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.js"></script>
 		<script src="/javascripts/angularApp.js"></script>
@@ -12,6 +13,14 @@
 
 	<body ng-app="badgerNews">
 		<div class="container">
+		<nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
+			<ul class="nav navbar-nav">
+				<li ng-show="isLoggedIn()"><a>{{currentUser()}}</a></li>
+				<li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
+				<li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
+				<li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
+			</ul>
+		</nav>
 			<div class="row">
 				<div class="col-md-6 col-md-offset-3">
 					
@@ -23,7 +32,11 @@
 						</div>
 						<div ng-repeat="post in posts | orderBy:'-upvotes'">
 							<span class="glyphicon glyphicon-thumbs-up" ng-click="incrementUpvotes(post)"></span>
+							<span class="glyphicon glyphicon-thumbs-down" ng-click="decrementUpvotes(post)"></span>
 							{{post.upvotes}}
+							<span ng-show="post.author">
+								posted by <a>{{post.author}}</a>
+							</span>
 							<span style="font-size:20px; margin-left:10px;">	
 								<a ng-show="post.link" href="{{post.link}}">
 									{{post.title}}
@@ -33,10 +46,13 @@
 								</span>
 							</span>	
 							<span>
-								<a href="#/posts/{{$index}}">Comments</a>
+								<a href="#/posts/{{post._id}}">Comments</a>
 							</span>
 						</div>
-						<form ng-submit="addPost()" style="margin-top:30px;">
+						<div ng-hide="isLoggedIn()">
+							<h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can add a post.</h3>
+						</div>
+						<form ng-submit="addPost()" ng-show="isLoggedIn()" style="margin-top:30px;">
 							<h3>Add a new post</h3>
 							<div class="form-group">
 								<input type="text" class="form-control" placeholder="Title" ng-model="title"/>
@@ -61,18 +77,59 @@
 						<div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
 							<span class="glyphicon glyphicon-thumbs-up"
 								ng-click="incrementUpvotes(comment)"></span>
+							<span class="glyphicon glyphicon-thumbs-down"
+								ng-click="decrementUpvotes(comment)"></span>
 								{{comment.upvotes}}-by {{comment.author}}
 							<span style="font-size:20px; margin-left:10px;">
 								{{comment.body}}
 							</span>
 						</div>
-						<form ng-submit="addComment()"
+						<div ng-hide="isLoggedIn()">
+							<h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can add a post.</h3>
+						</div>
+						<form ng-submit="addComment()" ng-show="isLoggedIn()"
 							style="margin-top:30px;">
 							<h3>Add a new comment</h3>
 							<div class="form-group">
 								<input type="text" class="form-control" placeholder="Comment" ng-model="body">
 							</div>
 							<button type="submit" class="btn btn-primary">Post</button>
+						</form>
+					</script>
+					<script type="text/ng-template" id="/register.html">
+						<div class="page-header">
+							<h1>Badger News</h1>
+						</div>
+						<div ng-show="error" class="alert alert-danger row">
+							<span>{{error.message}}</span>
+						</div>
+						<form ng-submit="register()" style="margin-top:30px;">
+							<h3>Register</h3>
+							<div class="form-group">
+								<input type="text" class="form-control" placeholder="Username" ng-model="user.username"/>
+							</div>
+							<div class="form-group">
+								<input type="password" class="form-control" placeholder="Password" ng-model="user.password"/>
+							</div>
+							<button type="submit" class="btn btn-primary">Register</button>
+						</form>
+					</script>
+					<script type="text/ng-template" id="/login.html">
+						<div class="page-header">
+							<h1>Badger News</h1>
+						</div>
+						<div ng-show="error" class="alert alert-danger row">
+							<span>{{error.message}}</span>
+						</div>
+						<form ng-submit="logIn()" style="margin-top:30px;">
+							<h3>Log In</h3>
+							<div class="form-group">
+								<input type="text" class="form-control" placeholder="Username" ng-model="user.username"/>
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" placeholder="Password" ng-model="user.password" />
+							</div> 
+							<button type="submit" class="btn btn-primary">Log In</button>
 						</form>
 					</script>
 				</div>
