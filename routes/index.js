@@ -15,7 +15,13 @@ router.post('/register', function(req,res,next){
 
 	User.count({username: req.body.username}, function (err, count){ 
     	if(count>0){
-        	return res.status(400).json({message:'User already exists'});
+        	return res.status(400).json({message:'User name already taken'});
+    	}
+	});
+
+	User.count({username: req.body.email}, function (err, count){ 
+    	if(count>0){
+        	return res.status(400).json({message:'Only one account per email address'});
     	}
 	});
 

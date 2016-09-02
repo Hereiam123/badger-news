@@ -12,6 +12,7 @@ require('./models/Posts');
 require('./models/Comments');
 require('./models/Users');
 require('./config/passport');
+require('./config/email-verification');
 
 
 var routes = require('./routes/index');

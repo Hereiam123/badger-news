@@ -39,9 +39,13 @@ app.config(['$stateProvider','$urlRouterProvider',
 			controller:'AuthCtrl',
 			onEnter:['$state','auth',function($state,auth){
 				if(auth.isLoggedIn()){
-					$state.go('home');
+					$state.go('verify');
 				}
 			}]
+		})
+		.state('verify',{
+			url:'/verify',
+			templateUrl:'/verify.html',
 		});
 	$urlRouterProvider.otherwise('home');
 }]);
@@ -219,7 +223,7 @@ app.controller('AuthCtrl',['$scope','$state','auth',
 				auth.register($scope.user).error(function(error){
 					$scope.error=error;
 				}).then(function(){
-					$state.go('home');
+					$state.go('verify');
 				});
 			};
 
