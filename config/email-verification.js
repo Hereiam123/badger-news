@@ -1,11 +1,12 @@
-var User=mongoose.model('User');
 var mongoose=require('mongoose');
-var nev=('email-verification')(mongoose);
+var User=mongoose.model('User');
+var nev=require('email-verification')(mongoose);
+
 
 nev.configure({
-	verificationURL: 'http://localhost:3000/email-verification/${URL}',
+	verificationURL: 'http://localhost:3000/#/email-verification/${URL}',
 	persistentUserModel: User,
-	tempUserCollection:'tempUsers',
+	tempUserCollection:'temporary_users',
 
 	transportOptions:{
 		service:'Gmail',
@@ -15,11 +16,16 @@ nev.configure({
 		}
 	},
 	verifyMailOptions:{
-		from:'Do Not Reply <bdemaio1_do_not_reply@gmail.com>'
+		from:'Do Not Reply <bdemaio1_do_not_reply@gmail.com>',
 		subject:'Please confirm badger-news account',
 		html:'<p>Click the following link to confirm your account:</p><p>${URL}</p>',
 		text:'Please confirm your account by clicking the following link:${URL}'
 	}
-},	function(error,options){	
+},	function(err,options){
+	if(err){
+		return next(err);
+	}
+	console.log('configured');	
 });
+
 

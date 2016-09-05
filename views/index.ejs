@@ -8,21 +8,27 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.js"></script>
 		<script src="/javascripts/angularApp.js"></script>
+		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+		<script>
+		  var socket = io();
+		</script>
 		<style>.glyphicon-thumbs-up{cursor:pointer}</style>
 	</head>
 
 	<body ng-app="badgerNews">
 		<div class="container">
-		<nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
-			<ul class="nav navbar-nav">
-				<li ng-show="isLoggedIn()"><a>{{currentUser()}}</a></li>
-				<li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
-				<li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
-				<li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
-			</ul>
-		</nav>
 			<div class="row">
-				<div class="col-md-6 col-md-offset-3">
+				<nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
+					<ul class="nav navbar-nav">
+						<li ng-show="isLoggedIn()"><a>{{currentUser()}}</a></li>
+						<li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
+						<li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
+						<li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
+					</ul>
+				</nav>
+			</div>
+			<div class="row">
+				<div class="col-md-10 col-md-offset-1">
 					
 					<ui-view></ui-view>
 
@@ -30,6 +36,7 @@
 						<div class="page-header">
 							<h1>Badger News</h1>
 						</div>
+						<div class="col-md-4 col-md-offset-1">
 						<div ng-repeat="post in posts | orderBy:'-upvotes'">
 							<span class="glyphicon glyphicon-thumbs-up" ng-click="incrementUpvotes(post)"></span>
 							<span class="glyphicon glyphicon-thumbs-down" ng-click="decrementUpvotes(post)"></span>
@@ -62,6 +69,29 @@
 							</div>
 							<button type="submit" class="btn btn-primary">Post</button>
 						</form>
+						</div>
+						<div class="col-md-6" ng-controller="ChatCtrl">
+							<div class="row">   
+							    <form role="form" class="form-inline" ng-submit="sendMsg()">
+							      <div class="form-group">
+							        <input ng-model="msg" class="form-control"/>
+							        <input type="submit" class="btn btn-info"/>
+							      </div>
+							    </form>
+							</div>
+							<div class="row">
+							    <div class="col-md-3">
+							      <h4>What Was Said</h4>
+							      <ul>
+							        <li ng-repeat="msg in msgs">{{msg}}</li>
+							      </ul>
+							    </div>
+							    <div class="col-md-3">
+							      <h4>What You'll Say</h4>
+							      {{output.text}}
+							    </div>
+							</div>
+						</div>
 					</script>
 					<script type="text/ng-template" id="/posts.html">
 						<div class="page-header">
@@ -130,7 +160,7 @@
 								<input type="text" class="form-control" placeholder="Username" ng-model="user.username"/>
 							</div>
 							<div class="form-group">
-								<input type="text" class="form-control" placeholder="Password" ng-model="user.password" />
+								<input type="password" class="form-control" placeholder="Password" ng-model="user.password" />
 							</div> 
 							<button type="submit" class="btn btn-primary">Log In</button>
 						</form>

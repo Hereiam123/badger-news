@@ -7,9 +7,18 @@ var User=mongoose.model('User');
 var passport=require('passport');
 var jwt=require('express-jwt');
 var auth=jwt({secret:'SECRET', userProperty:'payload'});
+//var nev=require('email-verification')(mongoose);
+//var nodemailer=require('nodemailer'); 
+/*nev.generateTempUserModel(User,function(err,tempUserModel){
+	if(err){
+		console.log(err);
+		return;
+	}
+	console.log('generated temp model');
+});*/
 
 router.post('/register', function(req,res,next){
-	if(!req.body.username || !req.body.password){
+	if(!req.body.username || !req.body.password || !req.body.email){
 		return res.status(400).json({message:'Please fill out all fields'});
 	}
 
@@ -19,7 +28,7 @@ router.post('/register', function(req,res,next){
     	}
 	});
 
-	User.count({username: req.body.email}, function (err, count){ 
+	User.count({email: req.body.email}, function (err, count){ 
     	if(count>0){
         	return res.status(400).json({message:'Only one account per email address'});
     	}
@@ -27,16 +36,43 @@ router.post('/register', function(req,res,next){
 
 	var user=new User();
 
-	user.username=req.body.username;
+	console.log('created new user');
 
+	user.username=req.body.username;
+	user.email=req.body.email;
 	user.setPassword(req.body.password);
 
+	console.log('retrieved user info');
+
+	/*nev.createTempUser(user,function(err,existingPersistentUser,newTempUser){
+		if(err){return res.status(404).json({message:'Creating temp user failed'});}
+		if(existingPersistentUser){
+			return res.status(400).json({message:'User exists'});
+		}
+		if(newTempUser){
+			var URL=newTempUser[nev.options.URLFieldName];
+			nev.sendVerificationEmail(email,URL,function(err,info){
+				if(err){return res.status(404).json({message:'error sending mail'});}
+				res.json({message:'Email Sent!'});
+			});
+		}
+		else
+		{
+			return res.status(400).json({message:'There was a problem'});
+		}	
+	});
+
+	console.log('created temp');*/
 	user.save(function(err)
 	{
 		if(err){return next(err);}
 		return res.json({token: user.generateJWT()});
 	});
 });
+
+/*router.get('/email-verification/:URL',function(req,res){
+	var url=
+});*/
 
 router.post('/login',function(req,res,next){
 	if(!req.body.username||!req.body.password){
@@ -47,7 +83,7 @@ router.post('/login',function(req,res,next){
 		if(err){return next(err);}
 
 		if(user){
-			return res.json({token: user.generateJWT});
+			return res.json({token: user.generateJWT()});
 		}
 		else{
 			return res.status(401).json(info);

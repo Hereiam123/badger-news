@@ -6,13 +6,17 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport=require('passport');
 var mongoose=require('mongoose');
+//var nev=require('email-verification')(mongoose);
+//var nodemailer=require('nodemailer');
+
 mongoose.connect('mongodb://localhost/news');
 
 require('./models/Posts');
 require('./models/Comments');
 require('./models/Users');
 require('./config/passport');
-require('./config/email-verification');
+//require('./config/nodemailer');
+//require('./config/email-verification');
 
 
 var routes = require('./routes/index');
@@ -31,7 +35,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(passport.initialize());
 app.use('/', routes);
 app.use('/users', users);
@@ -66,6 +69,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;
