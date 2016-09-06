@@ -11,10 +11,12 @@ var mongoose=require('mongoose');
 
 // Here we find an appropriate database to connect to, defaulting to
 // localhost if we don't find one.
-var uristring =
+/*var uristring =
 process.env.MONGOLAB_URI ||
 process.env.MONGOHQ_URL ||
-'mongodb://localhost/news';
+'mongodb://localhost/news';*/
+
+var uristring='mongodb://brian:@youRay123@ds019936.mlab.com:19936/heroku_0nbsm0zp' || 'mongodb://localhost/news';
 
 console.log('mongolaburi'+process.env.MONGOLAB_URI);
 
