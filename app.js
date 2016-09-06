@@ -11,12 +11,14 @@ var mongoose=require('mongoose');
 
 // Here we find an appropriate database to connect to, defaulting to
 // localhost if we don't find one.
-var uristring =
+/*var uristring =
 process.env.MONGOLAB_URI ||
 process.env.MONGOHQ_URL ||
-'mongodb://localhost/news';
+'mongodb://localhost/news';*/
 
-console.log(process.env.MONGOLAB_URI);
+var uristring='mongodb://heroku_0nbsm0zp:o55na5apq3f4v0qbvga945og0s@ds019936.mlab.com:19936/heroku_0nbsm0zp';
+
+console.log('uri'+uristring);
 
 // Makes connection asynchronously.  Mongoose will queue up database
 // operations and release them when the connection is complete.
