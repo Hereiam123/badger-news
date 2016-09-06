@@ -16,7 +16,7 @@ process.env.MONGOLAB_URI ||
 process.env.MONGOHQ_URL ||
 'mongodb://localhost/news';*/
 
-var uristring='mongodb://heroku_0nbsm0zp:o55na5apq3f4v0qbvga945og0s@ds019936.mlab.com:19936/heroku_0nbsm0zp';
+var uristring='mongodb://localhost/news' || 'mongodb://heroku_0nbsm0zp:o55na5apq3f4v0qbvga945og0s@ds019936.mlab.com:19936/heroku_0nbsm0zp';
 
 console.log('uri'+uristring);
 
