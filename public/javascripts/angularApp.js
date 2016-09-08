@@ -1,4 +1,4 @@
-var app=angular.module('badgerNews', ['ui.router','ui-bootstrap']);
+var app=angular.module('badgerNews', ['ui.router','ui.bootstrap']);
 
 app.config(['$stateProvider','$urlRouterProvider',
 	function($stateProvider,$urlRouterProvider) {
